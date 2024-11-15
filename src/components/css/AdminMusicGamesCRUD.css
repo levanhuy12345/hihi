@@ -1,0 +1,220 @@
+/* admin-music-games-crud.css */
+
+/* Toàn bộ container của CRUD */
+.admin-music-game-crud {
+    font-family: 'Arial', sans-serif;
+    margin: 20px;
+    padding: 20px;
+    background-color: #f4f4f9;
+    border-radius: 8px;
+}
+
+/* Tiêu đề */
+h1 {
+    text-align: center;
+    color: #2c3e50;
+    margin-bottom: 30px;
+}
+
+/* Thông báo lỗi */
+.error-message {
+    color: #e74c3c;
+    font-weight: bold;
+    text-align: center;
+}
+
+/* Bảng danh sách game */
+.game-list {
+    max-width: 80%;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.game-list h2 {
+    text-align: center;
+    color: #2c3e50;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+table th, table td {
+    padding: 12px;
+    text-align: center;
+    border: 1px solid #ddd;
+}
+
+table th {
+    background-color: #3498db;
+    color: white;
+}
+
+table tbody tr:hover {
+    background-color: #ecf0f1;
+}
+
+/* CSS cho các nút trong bảng */
+button {
+    padding: 8px 16px;
+    margin: 5px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+button:hover {
+    background-color: #007bff;
+    color: white;
+}
+
+/* Tách nút Edit và Delete */
+button.edit-btn {
+    margin-right: 10px; /* Tách ra từ nút Delete */
+}
+
+button.delete-btn {
+    margin-left: 10px; /* Tách ra từ nút Edit */
+    background-color: #e74c3c;
+}
+
+
+/* Modal (Popup) */
+.modal.show {
+    display: block;
+}
+
+.modal-dialog {
+    max-width: 600px;
+    margin: 100px auto;
+}
+
+.modal-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #ddd;
+}
+
+.modal-title {
+    font-size: 20px;
+    color: #2c3e50;
+}
+
+.close {
+    font-size: 24px;
+    cursor: pointer;
+    color: #aaa;
+}
+
+.close:hover {
+    color: #333;
+}
+
+/* Các trường input trong modal */
+form label {
+    display: block;
+    margin: 10px 0;
+    font-size: 14px;
+    color: #2c3e50;
+}
+
+form input {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    font-size: 14px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    background-color: #f4f4f9;
+}
+
+form input:focus {
+    outline: none;
+    border-color: #3498db;
+}
+
+/* Các nút trong footer của modal */
+.modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    padding-top: 20px;
+}
+
+.btn {
+    padding: 10px 20px;
+    font-size: 14px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-left: 10px;
+}
+
+.btn-primary {
+    background-color: #3498db;
+    color: white;
+    border: none;
+}
+
+.btn-secondary {
+    background-color: #95a5a6;
+    color: white;
+    border: none;
+}
+
+.btn-primary:hover {
+    background-color: #2980b9;
+}
+
+.btn-secondary:hover {
+    background-color: #7f8c8d;
+}
+
+/* Các nút nhập liệu */
+input[type="file"] {
+    margin: 10px 0;
+}
+
+input[type="file"]::file-selector-button {
+    background-color: #3498db;
+    color: white;
+    padding: 10px 15px;
+    border-radius: 5px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+input[type="file"]::file-selector-button:hover {
+    background-color: #2980b9;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .game-list {
+        max-width: 100%;
+        padding: 10px;
+    }
+
+    table {
+        font-size: 12px;
+    }
+
+    .modal-dialog {
+        width: 90%;
+    }
+}
+
+
+
+

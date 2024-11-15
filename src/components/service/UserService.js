@@ -15,6 +15,100 @@ class UserService {
             throw new Error('Login failed. Please check your credentials and try again.');
         }
     }
+    static async getAllMusicGames(token) {
+        try {
+            const response = await axios.get(`${UserService.BASE_URL}/musicgames`, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            return response.data; 
+        } catch (err) {
+            console.error('Error fetching music games:', err.response ? err.response.data : err.message);
+            throw new Error('Failed to fetch music games. Please try again later.');
+        }
+    }
+
+    static async getMusicGameById(id, token) {
+        try {
+            const response = await axios.get(`${UserService.BASE_URL}/musicgames/${id}`, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            return response.data;
+        } catch (err) {
+            console.error('Error fetching music game by ID:', err.response ? err.response.data : err.message);
+            throw new Error('Failed to fetch music game. Please try again later.');
+        }
+    }
+
+    static async createMusicGame(gameData, token) {
+        try {
+            const response = await axios.post(`${UserService.BASE_URL}/musicgames`, gameData, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+    
+            console.log('Game created successfully:', response.data);
+            
+            // Kiểm tra nếu API trả về mảng hoặc đối tượng
+            return Array.isArray(response.data) ? response.data : [response.data];  // Always return an array
+            
+        } catch (err) {
+            console.error('Error creating music game:', err.response ? err.response.data : err.message);
+            throw new Error(err.response?.data?.message || 'Failed to create music game. Please try again later.');
+        }
+    }
+    
+    
+
+    static async updateMusicGame(id, updatedData, token) {
+        try {
+            const response = await axios.put(`${UserService.BASE_URL}/musicgames/${id}`, updatedData, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            return response.data;  
+        } catch (err) {
+            if (err.response) {
+                console.error('Error response data:', err.response.data);  
+                console.error('Error response status:', err.response.status); 
+            } else {
+                console.error('Error message:', err.message);  
+            }
+            throw new Error('Failed to update music game. Please try again later.');
+        }
+    }
+    
+    
+
+    static async deleteMusicGame(id, token) {
+        try {
+            const response = await axios.delete(`${UserService.BASE_URL}/musicgames/${id}`, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            return response.data;
+        } catch (err) {
+            console.error('Error deleting music game:', err.response ? err.response.data : err.message);
+            throw new Error('Failed to delete music game. Please try again later.');
+        }
+    }
+    
+    static async importAndCreateMusicGames(file, token) {
+        const formData = new FormData();
+        formData.append('file', file);
+        
+        try {
+            const response = await axios.post(`${UserService.BASE_URL}/musicgames/importandcreate`, formData, {
+                headers: {
+                    'Authorization': `Bearer ${token}`, 
+                    'Content-Type': 'multipart/form-data', 
+                }
+            });
+            return response.data;
+        } catch (err) {
+            console.error('Error importing and creating music games:', err.response ? err.response.data : err.message);
+            throw new Error('Failed to import and create music games. Please try again later.');
+        }
+    }
+    
+    
+
     static async getAllSongs(token) {
         try {
             const response = await axios.get(`${this.BASE_URL}/songs`, {
@@ -26,8 +120,137 @@ class UserService {
             throw new Error('Failed to fetch songs. Please try again later.');
         }
     }
+    static async getSongById(id, token) {
+        try {
+            const response = await axios.get(`${UserService.BASE_URL}/songs/${id}`, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            return response.data; // Return specific song data
+        } catch (error) {
+            console.error("Error fetching song by ID:", error);
+            throw new Error('Failed to fetch song. Please try again later.');
+        }
+    }
 
+    static async createSong(songData, token) {
+        //
+        try {
+            const response = await axios.post(`${UserService.BASE_URL}/songs`, songData, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            console.log('Song created successfully:', response.data);
+            return response.data; // Return created song data
+        } catch (error) {
+            console.error("Error creating song:", error);
+            throw new Error('Failed to create song. Please try again later.');
+        }
+    }
 
+    // static async updateSong(id, songData, token) {
+    //     try {
+    //         const response = await axios.put(`${UserService.BASE_URL}/songs/${id}`, songData, {
+    //             headers: { Authorization: `Bearer ${token}` }
+    //         });
+    //         console.log('Song updated successfully:', response.data);
+    //         return response.data; // Return updated song data
+    //     } catch (error) {
+    //         console.error("Error updating song:", error);
+    //         throw new Error('Failed to update song. Please try again later.');
+    //     }
+    // }
+    static async updateSong(id, songData, token) {
+        try {
+            if (!token) {
+                console.error("Authorization token is missing");
+                throw new Error('Authorization token is required');
+            }
+            
+            console.log("Updating song with ID:", id);
+            const response = await axios.put(`${UserService.BASE_URL}/songs/${id}`, songData, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+    
+            console.log('Song updated successfully:', response.data);
+            return response.data; // Return updated song data
+        } catch (error) {
+            console.error("Error updating song:", error.response ? error.response.data : error.message);
+            throw new Error('Failed to update song. Please try again later.');
+        }
+    }
+    
+    static async deleteSong(id, token) {
+        try {
+            const response = await axios.delete(`${UserService.BASE_URL}/songs/${id}`, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            console.log('Song deleted successfully:', response.data);
+            return response.data; // Return success message or deleted data
+        } catch (error) {
+            console.error("Error deleting song:", error);
+            throw new Error('Failed to delete song. Please try again later.');
+        }
+    }
+    static async getAllArtists(token) {
+        try {
+            const response = await axios.get(`${UserService.BASE_URL}/artists`, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            return response.data;
+        } catch (error) {
+            console.error("Error fetching artists:", error);
+            throw new Error('Failed to fetch artists. Please try again later.');
+        }
+    }
+
+    static async getArtistById(id, token) {
+        try {
+            const response = await axios.get(`${UserService.BASE_URL}/artists/${id}`, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            return response.data;
+        } catch (error) {
+            console.error("Error fetching artist by ID:", error);
+            throw new Error('Failed to fetch artist. Please try again later.');
+        }
+    }
+
+    static async createArtist(artistData, token) {
+        try {
+            const response = await axios.post(`${UserService.BASE_URL}/artists`, artistData, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            console.log('Artist created successfully:', response.data);
+            return response.data;
+        } catch (error) {
+            console.error("Error creating artist:", error);
+            throw new Error('Failed to create artist. Please try again later.');
+        }
+    }
+
+    static async updateArtist(id, updatedData, token) {
+        try {
+            const response = await axios.put(`${UserService.BASE_URL}/artists/${id}`, updatedData, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            return response.data;
+        } catch (err) {
+            console.error("Error updating artist:", err.response ? err.response.data : err.message);
+            throw new Error('Failed to update artist. Please try again later.');
+        }
+    }
+
+    static async deleteArtist(id, token) {
+        try {
+            const response = await axios.delete(`${UserService.BASE_URL}/artists/${id}`, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            console.log('Artist deleted successfully:', response.data);
+            return response.data;
+        } catch (error) {
+            console.error("Error deleting artist:", error);
+            throw new Error('Failed to delete artist. Please try again later.');
+        }
+    }
     static async register(userData, token) {
         try {
             const response = await axios.post(`${UserService.BASE_URL}/auth/register`, userData, {
@@ -111,7 +334,66 @@ class UserService {
             throw new Error('Failed to update user. Please try again later.');
         }
     }
+    
+    static async getAllAlbums(token) {
+        try {
+            const response = await axios.get(`${UserService.BASE_URL}/albums`, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            return response.data;
+        } catch (error) {
+            console.error("Error fetching albums:", error);
+            throw new Error('Failed to fetch albums. Please try again later.');
+        }
+    }
 
+    static async getAlbumById(id, token) {
+        try {
+            const response = await axios.get(`${UserService.BASE_URL}/albums/${id}`, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            return response.data;
+        } catch (error) {
+            console.error("Error fetching album by ID:", error);
+            throw new Error('Failed to fetch album. Please try again later.');
+        }
+    }
+
+    static async createAlbum(albumData, token) {
+        try {
+            const response = await axios.post(`${UserService.BASE_URL}/albums`, albumData, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            return response.data;
+        } catch (error) {
+            console.error("Error creating album:", error);
+            throw new Error('Failed to create album. Please try again later.');
+        }
+    }
+
+    static async updateAlbum(id, albumData, token) {
+        try {
+            const response = await axios.put(`${UserService.BASE_URL}/albums/${id}`, albumData, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            return response.data;
+        } catch (error) {
+            console.error("Error updating album:", error);
+            throw new Error('Failed to update album. Please try again later.');
+        }
+    }
+
+    static async deleteAlbum(id, token) {
+        try {
+            const response = await axios.delete(`${UserService.BASE_URL}/albums/${id}`, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            return response.data;
+        } catch (error) {
+            console.error("Error deleting album:", error);
+            throw new Error('Failed to delete album. Please try again later.');
+        }
+    }
     static logout() {
         localStorage.removeItem('token');
         localStorage.removeItem('role');

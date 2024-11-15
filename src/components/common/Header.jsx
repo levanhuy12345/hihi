@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Navbar, Nav, Form, FormControl, Button, Image } from 'react-bootstrap';
-import { FaHome, FaBell, FaClock } from 'react-icons/fa';
-import { IoIosGlobe } from 'react-icons/io';
+import { FaHome, FaBell } from 'react-icons/fa';
 import { Link, useNavigate } from 'react-router-dom';
 import UserService from '../service/UserService';
 import './Header.css';
