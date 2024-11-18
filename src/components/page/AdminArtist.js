@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import UserService from '../service/UserService';
 import { FaPlus, FaEdit, FaTrash } from 'react-icons/fa';
+import AdminPage from './Adminpage';
 
 function AdminArtistCRUD() {
     const [artists, setArtists] = useState([]);
@@ -123,6 +124,8 @@ function AdminArtistCRUD() {
     if (isLoading) return <p>Loading...</p>;
 
     return (
+        <div style={{display:'flex'}}> 
+        <AdminPage/> 
         <div className="admin-artist-crud">
             <h1>Admin Artist CRUD</h1>
             {error && <p className="error-message">{error}</p>}
@@ -197,6 +200,7 @@ function AdminArtistCRUD() {
                     </div>
                 </div>
             )}
+        </div>
         </div>
     );
 }

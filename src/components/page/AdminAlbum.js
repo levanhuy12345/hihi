@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import Axios from 'axios'; // Make sure Axios is installed
+import UserService from '../service/UserService';
+import AdminPage from './Adminpage';
 
 const AdminAlbum = () => {
+    const [number,setNumber] = useState(0)
     const [albums, setAlbums] = useState([]);
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(true);
     const [selectedAlbum, setSelectedAlbum] = useState(null); // To hold selected album for edit
-    const [formData, setFormData] = useState({ title: '', artist: '', cover_image_url: '', release_date: '' }); // Album form data
-
+    const [formData, setFormData] = useState({ title: '', artist:'' , cover_image_url: '', release_date: '' }); // Album form data
+    const [idd,setIdd] = useState(null); //
     // Fetch albums on component mount
     useEffect(() => {
         const fetchAlbums = async () => {
@@ -41,22 +44,24 @@ const AdminAlbum = () => {
         };
 
         fetchAlbums();
-    }, []); // Run this effect once when the component is mounted
+    }, [number]); // Run this effect once when the component is mounted
 
-    const handleCreate = async () => {
+    const handleCreate = () => {
         try {
+            const tittle = document.getElementById('tittle').value;
+            const  artist = document.getElementById('artist').value;
+            const url = document.getElementById('image').value;
+            const date = document.getElementById('date').value;
+
+           const payload = {title:tittle, artist:{artist_id: artist},cover_image_url:url,release_date: date}
             const token = localStorage.getItem('token');
-            const response = await Axios.post(
-                'http://localhost:1010/albums',
-                formData,
-                {
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                    }
-                }
-            );
-            setAlbums([...albums, response.data]); // Add the newly created album to the state
-            setFormData({ title: '', artist: '', cover_image_url: '', release_date: '' }); // Reset form
+      
+            UserService.createAlbum(payload,token)
+            .then((response)=>{console.log(response);setNumber(number+=1);
+            })
+            .catch((err) => { console.log(err); });
+            
+            
         } catch (err) {
             console.error("Error creating album:", err);
             setError("Failed to create album. Please try again later.");
@@ -65,22 +70,21 @@ const AdminAlbum = () => {
 
     const handleUpdate = async () => {
         try {
+            const tittle = document.getElementById('tittle').value;
+            const  artist = document.getElementById('artist').value;
+            const url = document.getElementById('image').value;
+            const date = document.getElementById('date').value;
+
+           const payload = {title:tittle, artist:{artist_id: artist},cover_image_url:url,release_date: date}
             const token = localStorage.getItem('token');
-            const response = await Axios.put(
-                `http://localhost:1010/albums/${selectedAlbum.album_id}`,
-                formData,
-                {
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                    }
-                }
-            );
-            const updatedAlbums = albums.map((album) =>
-                album.album_id === selectedAlbum.album_id ? response.data : album
-            );
-            setAlbums(updatedAlbums); // Update the album in the state
-            setSelectedAlbum(null); // Clear selected album after updating
-            setFormData({ title: '', artist: '', cover_image_url: '', release_date: '' }); // Reset form
+      
+            UserService.updateAlbum(idd,payload,token)
+            .then((response)=>{console.log(response)
+                setNumber(number+=1)
+
+            })
+            .catch((err) => { console.log(err); });
+            
         } catch (err) {
             console.error("Error updating album:", err);
             setError("Failed to update album. Please try again later.");
@@ -103,10 +107,13 @@ const AdminAlbum = () => {
     };
 
     const handleEdit = (album) => {
-        setSelectedAlbum(album); // Set selected album for editing
+        setSelectedAlbum(album);
+        setIdd( album.album_id);
+        console.log(album.album_id);
+        
         setFormData({
             title: album.title,
-            artist: album.artist ? album.artist.name : '',
+            artist: album.artist ? album.artist.artist_id : '',
             cover_image_url: album.cover_image_url,
             release_date: album.release_date,
         });
@@ -121,6 +128,8 @@ const AdminAlbum = () => {
     }
 
     return (
+        <div style={{display:'flex'}}>
+            <AdminPage/>
         <div>
             <h1>Album Management</h1>
             <div>
@@ -128,24 +137,28 @@ const AdminAlbum = () => {
                 <form onSubmit={(e) => e.preventDefault()}>
                     <label>Title:</label>
                     <input
+                        id='tittle'
                         type="text"
                         value={formData.title}
                         onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                     />
                     <label>Artist:</label>
                     <input
+                    id='artist'
                         type="text"
                         value={formData.artist}
                         onChange={(e) => setFormData({ ...formData, artist: e.target.value })}
                     />
                     <label>Cover Image URL:</label>
                     <input
+                    id='image'
                         type="text"
                         value={formData.cover_image_url}
                         onChange={(e) => setFormData({ ...formData, cover_image_url: e.target.value })}
                     />
                     <label>Release Date:</label>
                     <input
+                    id='date'
                         type="date"
                         value={formData.release_date}
                         onChange={(e) => setFormData({ ...formData, release_date: e.target.value })}
@@ -201,6 +214,7 @@ const AdminAlbum = () => {
                     )}
                 </tbody>
             </table>
+        </div>
         </div>
     );
 };

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import UserService from '../service/UserService';
+import AdminPage from './Adminpage';
 
 const AdminUser = () => {
     const [users, setUsers] = useState([]);
@@ -99,6 +100,10 @@ const AdminUser = () => {
     }
 
     return (
+        <div style={{display:"flex"}} >
+            <AdminPage>
+
+            </AdminPage>
         <div>
             <h1>User Management</h1>
             <table>
@@ -187,6 +192,7 @@ const AdminUser = () => {
                     </form>
                 </div>
             )}
+        </div>
         </div>
     );
 };

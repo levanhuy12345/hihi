@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, TextField, Box } from '@mui/material';
 import UserService from '../service/UserService';
-import '../css/AdminMusicGamesCRUD.css';
+import AdminPage from './Adminpage';
 import { FaPlus, FaEdit, FaTrash } from 'react-icons/fa';
 
 function AdminMusicGamesCRUD() {
@@ -97,6 +98,7 @@ function AdminMusicGamesCRUD() {
         const { question_text, answer_1, answer_2, answer_3, answer_4, correct_answer } = newGame;
         return question_text && answer_1 && answer_2 && answer_3 && answer_4 && (correct_answer >= 1 && correct_answer <= 4);
     };
+
     const handleSaveGame = async () => {
         if (!validateNewGame()) {
             setError("Please fill in all fields correctly.");
@@ -113,15 +115,13 @@ function AdminMusicGamesCRUD() {
                     prevGames.map((game) => game.id === updatedGame.id ? updatedGame : game)
                 );
             } else {
-             
                 const gamesToCreate = Array.isArray(newGame) ? newGame : [newGame];
-                const createdGames = await UserService.createMusicGame(gamesToCreate, token);  // Gửi mảng gamesToCreate
-    
+                const createdGames = await UserService.createMusicGame(gamesToCreate, token); 
           
                 if (Array.isArray(createdGames)) {
-                    setMusicGames((prevGames) => [...prevGames, ...createdGames]);  // Thêm game mới vào danh sách
+                    setMusicGames((prevGames) => [...prevGames, ...createdGames]); 
                 } else {
-                    setMusicGames((prevGames) => [...prevGames, createdGames]);  // Thêm một game mới
+                    setMusicGames((prevGames) => [...prevGames, createdGames]);
                 }
             }
     
@@ -170,35 +170,93 @@ function AdminMusicGamesCRUD() {
     if (isLoading) return <p>Loading...</p>;
 
     return (
-        <div className="admin-music-game-crud">
+        <div style={{display:'flex'}}>
+            <AdminPage />
+            <div style={{ width: '100%' }}>
             <h1>Admin Music Games CRUD</h1>
             {error && <p className="error-message">{error}</p>}
-            <div className="game-list">
-                <h2>Game List</h2>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Question</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
+                <TableContainer component={Paper}>
+                    <Table>
+                        <TableHead>
+                            <TableRow>
+                                <TableCell>ID</TableCell>
+                                <TableCell>Question</TableCell>
+                                <TableCell>Actions</TableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
                         {musicGames.map((game) => (
-                            <tr key={game.id}>
-                                <td>{game.id}</td>
-                                <td>{game.question_text}</td>
-                                <td>
-                                    <button className="edit-btn" onClick={() => handleEditGame(game)}><FaEdit /> Edit</button>
-                                    <button className="delete-btn" onClick={() => handleDeleteGame(game.id)}><FaTrash /> Delete</button>
-                                </td>
-                            </tr>
+                                <TableRow key={game.id}>
+                                    <TableCell>{game.id}</TableCell>
+                                    <TableCell>{game.question_text}</TableCell>
+                                    <TableCell>
+                                        <Button onClick={() => handleEditGame(game)}><FaEdit /> Edit</Button>
+                                        <Button onClick={() => handleDeleteGame(game.id)}><FaTrash /> Delete</Button>
+                                    </TableCell>
+                                </TableRow>
                         ))}
-                    </tbody>
-                </table>
-                <button onClick={() => { resetModal(); setModalVisible(true); }}><FaPlus /> Create New Game</button>
+                        </TableBody>
+                    </Table>
+                </TableContainer>
+                <Button onClick={() => { resetModal(); setModalVisible(true); }}><FaPlus /> Create New Game</Button>
                 <input type="file" accept=".xlsx, .xls" onChange={handleFileChange} />
-                <button onClick={handleImportData}>Import Data</button>
+                <Button onClick={handleImportData}>Import Data</Button>
+
+                {modalVisible && (
+                    <Box component="form" sx={{ mt: 2 }} onSubmit={(e) => e.preventDefault()}>
+                        <TextField
+                            fullWidth
+                            label="Question"
+                            name="question_text"
+                            value={newGame.question_text}
+                            onChange={handleInputChange}
+                            margin="normal"
+                        />
+                        <TextField
+                            fullWidth
+                            label="Answer 1"
+                            name="answer_1"
+                            value={newGame.answer_1}
+                            onChange={handleInputChange}
+                            margin="normal"
+                        />
+                        <TextField
+                            fullWidth
+                            label="Answer 2"
+                            name="answer_2"
+                            value={newGame.answer_2}
+                            onChange={handleInputChange}
+                            margin="normal"
+                        />
+                        <TextField
+                            fullWidth
+                            label="Answer 3"
+                            name="answer_3"
+                            value={newGame.answer_3}
+                            onChange={handleInputChange}
+                            margin="normal"
+                        />
+                        <TextField
+                            fullWidth
+                            label="Answer 4"
+                            name="answer_4"
+                            value={newGame.answer_4}
+                            onChange={handleInputChange}
+                            margin="normal"
+                        />
+                        <TextField
+                            fullWidth
+                            label="Correct Answer (1-4)"
+                            name="correct_answer"
+                            value={newGame.correct_answer}
+                            onChange={handleInputChange}
+                            margin="normal"
+                            type="number"
+                        />
+                        <Button onClick={handleSaveGame}>Save</Button>
+                        <Button onClick={resetModal}>Cancel</Button>
+                    </Box>
+                )}
             </div>
 
             {modalVisible && (

@@ -21,7 +21,13 @@ const LoginPage = () => {
             if (userData.token) {
                 localStorage.setItem('token', userData.token);
                 localStorage.setItem('role', userData.role);
-                navigate('/profile'); // Redirect to profile page upon success
+                if(userData.role === "USER"){
+                    // chỗ này tí sửa lại vì cái profile page không ổn lắm
+                    navigate('/profile')
+                }else{
+                    navigate('/adminpage')
+                }
+                ; // Redirect to profile page upon success
             } else {
                 setError(userData.message);
             }
